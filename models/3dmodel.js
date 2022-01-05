@@ -12,11 +12,10 @@ const VRSchema = new mongoose.Schema({
         required: true
     },
     vrObject: [{
-        url:String,
-        position:Array,
-        scale:Array,
-        rotation:Array,
-
+        name:String,
+        position:String,
+        scale:String,
+        rotation:String,
     }]   
 })
 
