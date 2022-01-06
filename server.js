@@ -8,6 +8,9 @@ const indexRoute = require('./routes/projects')
 const app = express();
 
 // const cros = require('cors');
+var cors = require('cors')
+
+app.use(cors());
 
 app.use(express.static(__dirname+'/public'));
 app.use(express.json());
