@@ -37,4 +37,12 @@ router.post('/',(req,res)=>{
     
 });
 
+router.get('/home',(req,res)=>{
+    res.render('index',{title:"Home"})
+})
+
+router.get('/environments',(req,res)=>{
+    res.render('environments',{title:'Environments'})
+})
+
 module.exports = router;

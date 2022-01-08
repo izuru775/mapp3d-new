@@ -1,33 +1,31 @@
-<html>
-  <head>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.6.0.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"
-    ></script>
-    <!-- JavaScript Bundle with Popper -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-      crossorigin="anonymous"
-    ></script>
-    <!-- Aframe environment component -->
-    <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
-  </head>
-  <body>
-    <a-scene id="mainScene" background="color:black" environment="preset:forest">
-      <!-- <a-plane
-        position="0 0 -4"
-        rotation="-90 0 0"
-        scale="100 100 100"
-        width="100"
-        height="100"
-      ></a-plane> -->
-      <a-sky color="white"></a-sky>
-      <a-assets id="assets"> </a-assets>
-    </a-scene>
-  </body>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
+<!-- JavaScript Bundle with Popper -->
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+  crossorigin="anonymous"
+></script>
+ <!-- Compiled and minified JavaScript -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- Aframe environment component -->
+<script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+
+<a-scene id="mainScene" background="color:black" environment="preset:forest">
+    <!-- <a-plane
+      position="0 0 -4"
+      rotation="-90 0 0"
+      scale="100 100 100"
+      width="100"
+      height="100"
+    ></a-plane> -->
+    <a-sky color="white"></a-sky>
+    <a-assets id="assets"> </a-assets>
+  </a-scene>
 
   <script>
     $(document).ready(() => {
@@ -41,7 +39,7 @@
           result.data[0];
         let { position, scale, rotation } = vrObject[0];
 
-        console.log(scale[0]);
+        console.log(scale);
 
         let models = [
           {
@@ -64,9 +62,9 @@
           },
           {
             model: "foresthouse",
-            scale: scale[0],
-            rotation: rotation[0],
-            position: position[0],
+            scale: scale,
+            rotation: rotation,
+            position: position,
           }
         ];
 

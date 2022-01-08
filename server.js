@@ -4,9 +4,19 @@ const express = require('express');
 const path = require('path');
 const connectDB = require('./dbConnect');
 const indexRoute = require('./routes/projects')
+var expressLayouts = require('express-ejs-layouts');
+var flash = require('connect-flash');
+var session = require('express-session');
 
 const app = express();
-
+// EJS added as view engine
+app.set('view engine', 'ejs');
+app.use(expressLayouts);
+app.use(session({
+    secret:'cat',
+    resave:true,
+    saveUninitialized:true
+  }))
 // const cros = require('cors');
 var cors = require('cors')
 
@@ -17,6 +27,17 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 // app.use(cros);
 
+// connect flash
+app.use(flash());
+
+// Global Vars
+app.use((req,res,next)=>{
+    res.locals.success_msg = req.flash('success_msg')
+    res.locals.error_msg = req.flash('error_msg')
+    res.locals.error = req.flash('error')
+    next()
+  })
+  
 app.use("/api",indexRoute);
 
 app.use((req,res,next)=>{

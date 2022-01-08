@@ -1,0 +1,33 @@
+
+<nav class="nav-extended teal darken-4">
+  <div class="nav-wrapper">
+    <a href="#" class="brand-logo">Logo</a>
+    <a href="#" data-target="mobile-demo" class="sidenav-trigger"
+      ><i class="material-icons">menu</i></a
+    >
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="/api/home">Home</a></li>
+      <li><a href="/api/environments">My Environments</a></li>
+      <li><a href="collapsible.html">Create Environments</a></li>
+      <li><a href="collapsible.html">About</a></li>
+    </ul>
+  </div>
+</nav>
+<ul class="sidenav" id="mobile-demo">
+    <li><a href="/api/home">Home</a></li>
+    <li><a href="/api/environments">My Environments</a></li>
+    <li><a href="collapsible.html">Create Environments</a></li>
+    <li><a href="collapsible.html">About</a></li>
+</ul>
+<!-- Compiled and minified JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+ <!-- Compiled and minified CSS -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+ <!-- Compiled and minified JavaScript -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".sidenav").sidenav();
+  });
+</script>
