@@ -1,0 +1,68 @@
+
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
+<!-- JavaScript Bundle with Popper -->
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+  crossorigin="anonymous"
+></script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- Aframe environment component -->
+<script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+
+<a-scene>
+    <a-assets>
+      <!--
+      SOURCE
+      Author: Bitmovin
+      URL:    https://bitmovin.com/demos/vr-360
+      -->
+      <video id="video"
+             autoplay loop
+             crossorigin="anonymous"
+             playsinline webkit-playsinline
+             src="https://vespascooter.s3.ap-southeast-2.amazonaws.com/360_VR+Master+Series+_+Free+Download+_+Crystal+Shower+Falls.mp4">
+      </video>
+    </a-assets>
+    <a-videosphere
+      rotation="0 -90 0" src="#video"
+      play-on-click>
+    </a-videosphere>
+
+    <a-camera>
+      <a-entity
+        position="0 0 -1.5"
+        text="align:center;
+              width:6;
+              wrapCount:100;
+              color: white;
+              value: Click or tap to start video"
+        hide-on-play="#video">
+      </a-entity>
+    </a-camera>
+  </a-scene>
+  <script>
+      /* global AFRAME */
+AFRAME.registerComponent('play-on-click', {
+  init: function () {
+    this.onClick = this.onClick.bind(this);
+  },
+  play: function () {
+    window.addEventListener('click', this.onClick);
+  },
+  pause: function () {
+    window.removeEventListener('click', this.onClick);
+  },
+  onClick: function (evt) {
+    var videoEl = this.el.getAttribute('material').src;
+    if (!videoEl) { return; }
+    this.el.object3D.visible = true;
+    videoEl.play();
+  }
+});
+  </script>
