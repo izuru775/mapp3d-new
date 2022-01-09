@@ -44,5 +44,13 @@ router.get('/home',(req,res)=>{
 router.get('/environments',(req,res)=>{
     res.render('environments',{title:'Environments'})
 })
-
+router.get('/myEnvironments',(req,res)=>{
+    res.render('myEnvironments',{title:'My Environments'})
+})
+router.get('/miami',(req,res)=>{
+    res.render('miami',{title:'My Environments'})
+})
+router.get('/360video',(req,res)=>{
+    res.render('360video',{title:'360 video'})
+})
 module.exports = router;
