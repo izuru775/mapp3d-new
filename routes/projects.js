@@ -50,7 +50,14 @@ router.get('/myEnvironments',(req,res)=>{
 router.get('/miami',(req,res)=>{
     res.render('miami',{title:'My Environments'})
 })
+router.get('/createEnvironment',(req,res)=>{
+    res.render('createEnvironment',{title:'Create Environment'})
+})
+router.get('/editEnvironment',(req,res)=>{
+    res.render('editEnvironment',{title:'Edit Environment '})
+})
 router.get('/360video',(req,res)=>{
     res.render('360video',{title:'360 video'})
 })
 module.exports = router;
+
