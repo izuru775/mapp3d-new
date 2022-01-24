@@ -10,26 +10,82 @@
 />
 
 <link href="/styles.css" rel="stylesheet" type="text/css" />
+<a-scene physics-world="">
+      <a-assets>
+        <a-mixin id="box" geometry=" primitive: box" material="color:green; side: double"
+                          physics-body="mass: 5; boundingBox: 1 1 1"></a-mixin>
+        <img id="ground" src="/images/Earth.jpg">
+      </a-assets>
+      <a-camera>
+        <a-cursor></a-cursor>
+      </a-camera>
 
-<a-scene>
-  <a-assets>
-    <img id="ground" src="/images/Earth.jpg">
-  </a-assets>
-  <a-light color="red" position="-1 1 0"></a-light>
-  <a-super-sky 
-  cycleduration="1"
-  groundcolor="#7BC8A4"
-></a-super-sky>
-  <!-- Basic plane. -->
-  <a-plane src="#ground" height="100%" width="100%" rotation="-90 0 0" material="shader: flat; src: #ground; repeat:20 20"></a-plane>
+      <a-light color="white" position="-1 1 0"></a-light>
+                <a-super-sky 
+                cycleduration="1"
+                groundcolor="#7BC8A4"
+                ></a-super-sky>
 
- 
+                <a-entity
+                geometry="primitive: box; depth: 50; height: 0.1; width: 50"
+                material="src:#ground;repeat:20 20"
+                physics-body="mass: 0; boundingBox: 50 0.1 50" position="0 0 -10"></a-entity>
+
+      <!-- Box falling directly from above -->
+      <a-entity id="right-box" 
+                mixin="box" 
+                position="0 10 -10"
+                physics-body="mass:1 velocity: 0 -100 -100"></a-entity>
+      <!-- stationary box -->
+      <a-entity id="left-box" 
+                mixin="box" 
+                position="-2.1 1 -13"></a-entity>
+      <!-- Box that getting hit by the "bullet-box" -->
+      <a-entity id="flying-box"
+                mixin="box"
+                physics-body=" angularVelocity: 0 0 100"
+                position="2 1 -20"></a-entity>
+
+      <a-entity id="bullet-box" 
+                mixin="box"
+                physics-body="mass: 1; velocity: 0 0 -100"
+                position="2 3 50"></a-entity>
+
+    
+    </a-scene>
+  <script>
+    var scene = document.querySelector('a-scene');
+    scene.addEventListener('loaded', function () {
+      
+      // Reffering to bullet box
+      var boxb = document.getElementById('bullet-box');
+      var boxf = document.getElementById('flying-box');
+      // Refering to the stationary box
+      var boxl = document.getElementById('left-box');
+      var boxr = document.getElementById('right-box');
+      // Apply impulse;
+      setTimeout(function () {
+        var impulse = { x: 50, y: 2, z: 5 };
+        var point = { x: 0, y: 0, z: 1 };
+        boxl.components['physics-body'].applyImpulse(impulse, point);
+      }, 100);
+
+      // Change color on collision.
+      scene.addEventListener('physics-beginContact', function (event) {
+        if (event.detail.bodyB === boxb) {
+          boxb.setAttribute('material', 'color', 'red');
+        }
+      });
+      scene.addEventListener('physics-endContact', function (event) {
+        if (event.detail.bodyA === boxf) {
+          boxf.setAttribute('material', 'color', 'yellow');
+        }
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      $(".sidenav").sidenav();
+    });
+  </script>
 </a-scene>
-
-
-<script>
-  $(document).ready(function () {
-    $(".sidenav").sidenav();
-  });
-  
-</script>

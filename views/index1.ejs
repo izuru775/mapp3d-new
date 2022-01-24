@@ -1,0 +1,35 @@
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+/>
+
+<!-- Materialize icons-->
+<link
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+  rel="stylesheet"
+/>
+
+<link href="/styles.css" rel="stylesheet" type="text/css" />
+
+<a-scene>
+  <a-assets>
+    <img id="ground" src="/images/Earth.jpg">
+  </a-assets>
+  <a-light color="red" position="-1 1 0"></a-light>
+  <a-super-sky 
+  cycleduration="1"
+  groundcolor="#7BC8A4"
+></a-super-sky>
+  <!-- Basic plane. -->
+  <a-plane src="#ground" height="100%" width="100%" rotation="-90 0 0" material="shader: flat; src: #ground; repeat:20 20"></a-plane>
+
+ 
+</a-scene>
+
+
+<script>
+  $(document).ready(function () {
+    $(".sidenav").sidenav();
+  });
+  
+</script>

@@ -42,7 +42,7 @@ router.get("/environments", (req, res) => {
   res.render("environments", { title: "Environments" });
 });
 router.get("/myEnvironments", (req, res) => {
-  res.render("myEnvironments", { title: "My Environments" });
+  res.render("myEnvironments", { title: "My Environments",data: "Hello" });
 });
 router.get("/miami", (req, res) => {
   res.render("miami", { title: "My Environments" });

@@ -1,107 +1,18 @@
+<div class="result">
 
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"
-></script>
-<!-- JavaScript Bundle with Popper -->
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-  crossorigin="anonymous"
-></script>
- <!-- Compiled and minified JavaScript -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<!-- Aframe environment component -->
-<script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+</div>
+<script>
+    $.get( "http://localhost:3001/api", function( data ) {
 
-<a-scene id="mainScene" background="color:black" environment="preset:forest">
-    <!-- <a-plane
-      position="0 0 -4"
-      rotation="-90 0 0"
-      scale="100 100 100"
-      width="100"
-      height="100"
-    ></a-plane> -->
-    <a-sky color="white"></a-sky>
-    <a-assets id="assets"> </a-assets>
-  </a-scene>
+  let myData = data.data
+  console.log(myData)
+  myData.forEach(element => {
+      $('.result').append(`<button id="mybutton">${element._id}</button>`)
+        $('.result').append(`<p>${element.environmentCreator}</p>`)
+  });
+});
 
-  <script>
-    $(document).ready(() => {
-      let dataUrl = "http://ec2-3-26-220-121.ap-southeast-2.compute.amazonaws.com:3001/api";
-
-      let objectArray = [];
-
-      // Retreving location,scale & rotation from dataUrl api
-      $.get(dataUrl, (result, err) => {
-        const { environmentName, environmentCreator, vrObject } =
-          result.data[0];
-        let { position, scale, rotation } = vrObject[0];
-
-        console.log(scale);
-
-        let models = [
-          {
-            model: "foresthouse",
-            scale: "50 50 50",
-            rotation: "0 0 0",
-            position: "24.952 0 -3.840 ",
-          },
-          {
-            model: "foresthouse",
-            scale: "50 50 50",
-            rotation: "0 180 0",
-            position: "-25.0 0 -3 ",
-          },
-          {
-            model: "foresthouse",
-            scale: "50 50 50",
-            rotation: "0 270 0",
-            position: "2.512 0 18 ",
-          },
-          {
-            model: "foresthouse",
-            scale: scale,
-            rotation: rotation,
-            position: position,
-          }
-        ];
-
-        let assets = [
-          {
-            name: "tree",
-            url: "https://bucketbeforekicks.s3.ap-southeast-2.amazonaws.com/tree.glb",
-          },
-          {
-            name: "foresthouse",
-            url: "https://foresthouse.s3.ap-southeast-2.amazonaws.com/forest_house/house.gltf",
-          },
-        ];
-
-        //load the assets dynamically
-        assets.forEach((asset) => {
-          let tAsset = $(
-            `<a-asset-item  id="${asset.name}" src="${asset.url}"></a-asset-item>`
-          );
-          $("#assets").append(tAsset);
-        });
-
-        models.forEach((model) => {
-          console.log(model);
-          //let test=$(`<div>Hello ${model}</div>`)
-          let test = $(
-            `<a-entity scale="${model.scale}" rotation="${model.rotation}" position="${model.position}" gltf-model="#${model.model}"></a-entity>`
-          );
-          $("#mainScene").append(test);
-          console.log(test);
-        });
-        document
-          .querySelector("a-entity")
-          .addEventListener("click", function (evt) {
-            console.log("This A-Frame entity collided with another entity!");
-          });
-      });
-    });
-  </script>
-</html>
+$('#mybutton').click(function(){
+    
+})
+</script>
