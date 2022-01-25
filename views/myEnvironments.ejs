@@ -1,65 +1,77 @@
-<div class="row">
-  <div class="col s12 m6">
-    <div class="card">
-      <div class="card-image">
-        <img src="/images/foresthouse.png" alt="foresthouse" />
-        <span class="card-title">Forest house</span>
-      </div>
-      <div class="card-content">
-        <div class="row">
-            <div class="col s12 m6 center-align"><a class="waves-effect waves-light btn-large ">Edit</a></div>
-            <div class="col s12 m6 center-align"><a class="waves-effect waves-light btn-large " href="/api/environments">Load</a></div>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-  <div class="col s12 m6">
-    <div class="card">
-      <div class="card-image">
-        <img src="/images/miami_thumb.png" alt="Miami" />
-        <span class="card-title">Miami</span>
-      </div>
-      <div class="card-content">
-        <div class="row">
-            <div class="col s12 m6 center-align"><a class="waves-effect waves-light btn-large ">Edit</a></div>
-            <div class="col s12 m6 center-align"><a class="waves-effect waves-light btn-large " href="/api/miami">Load</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col s12 m6">
-    <div class="card">
-      <div class="card-image">
-        <img src="/images/360waterfall.png" alt="foresthouse" />
-        <span class="card-title">Waterfall 360 video</span>
-      </div>
-      <div class="card-content">
-        <div class="row">
-            <div class="col s12 m6 center-align"><a class="waves-effect waves-light btn-large ">Edit</a></div>
-            <div class="col s12 m6 center-align"><a class="waves-effect waves-light btn-large " href="/api/360video">Load</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal Structure -->
-<div id="modal1" class="modal">
-  <div class="modal-content">
-    <h4>Modal Header</h4>
-    <p>A bunch of text</p>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
-  </div>
+<script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+<div id="replace" class="row">
+  <% records.forEach(function(record){ %> <%-
+  include("./partials/environmentCard.ejs",{record:record}) %> <% }) %>
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var elems = document.querySelectorAll(".modal");
-    var instances = M.Modal.init(elems);
-  });
-</script>
-<script>
-  
+      const createWorld=function(environment,options){
+        
+        console.log(environment)
+        console.log(options)
+
+        if(!(options.panorama)){
+          
+          let aVideo=$(`<video id="video"
+             autoplay loop
+             crossorigin="anonymous"
+             playsinline webkit-playsinline
+             src="${options.video}">
+      </video>`)
+      $("#assets").append(aVideo);
+
+      let aVideoSphere =$(`<a-videosphere
+      rotation="0 -90 0" src="#video"
+      play-on-click>
+    </a-videosphere>`)
+      $("#mainScene").append(aVideoSphere)
+
+        }
+         /* global AFRAME */
+AFRAME.registerComponent('play-on-click', {
+  init: function () {
+    this.onClick = this.onClick.bind(this);
+  },
+  play: function () {
+    window.addEventListener('click', this.onClick);
+  },
+  pause: function () {
+    window.removeEventListener('click', this.onClick);
+  },
+  onClick: function (evt) {
+    var videoEl = this.el.getAttribute('material').src;
+    if (!videoEl) { return; }
+    this.el.object3D.visible = true;
+    videoEl.play();
+  }
+});
+
+        }
+
+      const records =<%- JSON.stringify(records)%>;
+
+      console.log(typeof records[0]._id)
+      $(document).on('click',".waves-effect.waves-light.btn",function(){
+
+        let id = $(this).attr('id');
+
+
+        const isFound=(record)=>{
+          return record._id === id;
+        }
+       let env = records.find(isFound);
+
+       
+
+
+        $( "#replace" ).replaceWith( '<a-scene id="mainScene" background="color:black" >'+
+                                     '<a-assets id="assets"> </a-assets>'+
+                                     '</a-scene>' );
+
+                                     createWorld(env,env.environmentOptions)
+
+
+
+
+      })
 </script>
