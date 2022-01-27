@@ -1,77 +1,139 @@
 <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
 <div id="replace" class="row">
-  <% records.forEach(function(record){ %> <%-
-  include("./partials/environmentCard.ejs",{record:record}) %> <% }) %>
+  <% records.forEach(function(record){ %>
+    <%- include("./partials/environmentCard.ejs",{record:record}) %>
+      <% }) %>
 </div>
 
 <script>
-      const createWorld=function(environment,options){
-        
-        console.log(environment)
-        console.log(options)
+  const createWorld = function (environment, options) {
+    console.log(options)
+    _objectCreator = function (vrObject) {
+      let tAsset = $(
+        `<a-asset-item  id="${vrObject.name}" src="${vrObject.url}"></a-asset-item>`
+      );
+      $("#assets").append(tAsset);
+      let tEntity = $(
+        `<a-entity scale="${vrObject.scale}" rotation="${vrObject.rotation}" position="${vrObject.position}" gltf-model="#${vrObject.name}"></a-entity>`
+      );
+      $("#mainScene").append(tEntity);
 
-        if(!(options.panorama)){
-          
-          let aVideo=$(`<video id="video"
-             autoplay loop
-             crossorigin="anonymous"
-             playsinline webkit-playsinline
-             src="${options.video}">
-      </video>`)
-      $("#assets").append(aVideo);
+      // document
+      //   .querySelector("a-entity")
+      //   .addEventListener("click", function (evt) {
+      //     console.log("This A-Frame entity collided with another entity!");
+      //   });
+    }
 
-      let aVideoSphere =$(`<a-videosphere
-      rotation="0 -90 0" src="#video"
-      play-on-click>
-    </a-videosphere>`)
-      $("#mainScene").append(aVideoSphere)
+    _videoSceneCreator = function (videoOptions) {
+      let videoAsset = $(
+        `<video id="video"
+               autoplay loop
+               crossorigin="anonymous"
+               playsinline webkit-playsinline
+               src="${videoOptions}">
+            </video>`)
+      $("#assets").append(videoAsset);
 
+      let videoSphere = $(`<a-videosphere
+        rotation="0 -90 0" src="#video"
+        play-on-click>
+      </a-videosphere>`)
+      $("#mainScene").append(videoSphere);
+
+      /* global AFRAME */
+      AFRAME.registerComponent('play-on-click', {
+        init: function () {
+          this.onClick = this.onClick.bind(this);
+        },
+        play: function () {
+          window.addEventListener('click', this.onClick);
+        },
+        pause: function () {
+          window.removeEventListener('click', this.onClick);
+        },
+        onClick: function (evt) {
+          var videoEl = this.el.getAttribute('material').src;
+          if (!videoEl) { return; }
+          this.el.object3D.visible = true;
+          videoEl.play();
         }
-         /* global AFRAME */
-AFRAME.registerComponent('play-on-click', {
-  init: function () {
-    this.onClick = this.onClick.bind(this);
-  },
-  play: function () {
-    window.addEventListener('click', this.onClick);
-  },
-  pause: function () {
-    window.removeEventListener('click', this.onClick);
-  },
-  onClick: function (evt) {
-    var videoEl = this.el.getAttribute('material').src;
-    if (!videoEl) { return; }
-    this.el.object3D.visible = true;
-    videoEl.play();
-  }
-});
-
-        }
-
-      const records =<%- JSON.stringify(records)%>;
-
-      console.log(typeof records[0]._id)
-      $(document).on('click',".waves-effect.waves-light.btn",function(){
-
-        let id = $(this).attr('id');
-
-
-        const isFound=(record)=>{
-          return record._id === id;
-        }
-       let env = records.find(isFound);
-
-       
-
-
-        $( "#replace" ).replaceWith( '<a-scene id="mainScene" background="color:black" >'+
-                                     '<a-assets id="assets"> </a-assets>'+
-                                     '</a-scene>' );
-
-                                     createWorld(env,env.environmentOptions)
+      });
+    }
 
 
 
 
+    /// SETUP THE WORLD
+    if (options.preset) {
+      document.getElementById('mainScene').setAttribute('environment', `preset:${options.preset}`)
+    } else if (options.video) {
+
+      _videoSceneCreator(options.video)
+    } else if (options.panorama) {
+
+      let skyAsset = $(`<a-sky id="sky" src="${options.skyAsset.url}" rotation="0 -130 0"></a-sky>`)
+      $("#mainScene").append(skyAsset);
+
+    } else {
+      let skyAsset = $(
+        `<a-sky id="sky" color="${options.skyAsset.color}"></a-sky>`
+      );
+      let planeAsset = $(
+        `<a-plane id="plane"  position="0 0 -4"
+        rotation="-90 0 0"
+        scale="100 100 100"
+        width="100"
+        height="100"
+        color="${options.floorAsset.color}"></a-plane>`
+
+      );
+      $("#mainScene").append(skyAsset);
+      $("#mainScene").append(planeAsset);
+
+      // POPULATE THE WORLD
+      environment.vrObject.forEach(vrObject => {
+        console.log('VR Object', vrObject)
+        _objectCreator(vrObject)
       })
+
+    }
+
+
+
+
+
+
+
+
+  }
+
+  const records =<%- JSON.stringify(records) %>;
+
+  console.log(typeof records[0]._id)
+  $(document).on('click', ".waves-effect.waves-light.btn", function () {
+
+    let id = $(this).attr('id');
+
+
+    const isFound = (record) => {
+      return record._id === id;
+    }
+    let env = records.find(isFound);
+
+
+
+
+    $("#replace").replaceWith('<a-scene id="mainScene" background="color:black" >' +
+      '<a-assets id="assets"> </a-assets>' +
+      '</a-scene>');
+
+    createWorld(env, env.environmentOptions)
+      // back button
+      let backButton = $(`<li><a href="/api/myEnvironments">Back</a></li>`)
+    $('#nav-mobile').append(backButton)
+    $('.nav-btn').hide()
+
+
+  })
 </script>
