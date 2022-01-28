@@ -67,6 +67,10 @@
     /// SETUP THE WORLD
     if (options.preset) {
       document.getElementById('mainScene').setAttribute('environment', `preset:${options.preset}`)
+      environment.vrObject.forEach(vrObject => {
+        console.log('VR Object', vrObject)
+        _objectCreator(vrObject)
+      })
     } else if (options.video) {
 
       _videoSceneCreator(options.video)
@@ -107,7 +111,6 @@
 
 
   }
-
   const records =<%- JSON.stringify(records) %>;
 
   console.log(typeof records[0]._id)
@@ -132,6 +135,7 @@
       // back button
       let backButton = $(`<li><a href="/api/myEnvironments">Back</a></li>`)
     $('#nav-mobile').append(backButton)
+    // $('#mobile-demo').append(backButton)
     $('.nav-btn').hide()
 
 
