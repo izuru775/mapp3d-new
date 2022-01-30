@@ -103,41 +103,37 @@
 
     }
 
-
-
-
-
-
-
-
   }
   const records =<%- JSON.stringify(records) %>;
 
-  console.log(typeof records[0]._id)
+
   $(document).on('click', ".waves-effect.waves-light.btn", function () {
 
     let id = $(this).attr('id');
-
 
     const isFound = (record) => {
       return record._id === id;
     }
     let env = records.find(isFound);
 
-
-
-
     $("#replace").replaceWith('<a-scene id="mainScene" background="color:black" >' +
       '<a-assets id="assets"> </a-assets>' +
       '</a-scene>');
 
     createWorld(env, env.environmentOptions)
-      // back button
-      let backButton = $(`<li><a href="/api/myEnvironments">Back</a></li>`)
+    // back button
+    let backButton = $(`<li><a href="/api/myEnvironments">Back</a></li>`)
     $('#nav-mobile').append(backButton)
     // $('#mobile-demo').append(backButton)
     $('.nav-btn').hide()
 
 
   })
+
+  $(document).on('click', '.waves-effect.waves-light.btn', function (e) {
+    e.preventDefault();
+    let id = $(this).attr('id');
+    window.location.href = "/api/environments/"+id;
+    
+  });
 </script>

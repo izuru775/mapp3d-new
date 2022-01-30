@@ -18,8 +18,21 @@ router.get("/home", (req, res) => {
   res.render("index", { title: "Home" });
 });
 
-router.get('/environments',(req,res)=>{ 
-    res.render('environments',{title:'Environments'})
+router.get('/environments/:id',(req,res)=>{ 
+    let id = req.params.id
+    console.log(id)
+    VR.find({ _id: id })
+    .then((result) => {
+      if (result) {
+        res.render('environments', {
+          title: 'Environment',
+          records: result,
+        });
+      } else {
+        res.json({ statusCode: 400, message: err });
+      }
+    })
+    .catch((err) => console.log(err));
 })
 router.get('/myEnvironments',(req,res)=>{
   ProjectControllers.projectController.getEnvironmentsController(req,res)

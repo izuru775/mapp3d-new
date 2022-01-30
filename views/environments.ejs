@@ -1,162 +1,112 @@
-
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"
-></script>
-<!-- JavaScript Bundle with Popper -->
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-  crossorigin="anonymous"
-></script>
- <!-- Compiled and minified JavaScript -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<!-- Aframe environment component -->
 <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+<a-scene id="mainScene" background="color:black">
+  <a-assets id="assets"> </a-assets>
+</a-scene>
 
+<script>
+  const createWorld = function (environment, options) {
+    _objectCreator = function (vrObject) {
+      let tAsset = $(
+        `<a-asset-item  id="${vrObject.name}" src="${vrObject.url}"></a-asset-item>`
+      );
+      $("#assets").append(tAsset);
+      let tEntity = $(
+        `<a-entity scale="${vrObject.scale}" rotation="${vrObject.rotation}" position="${vrObject.position}" gltf-model="#${vrObject.name}"></a-entity>`
+      );
+      $("#mainScene").append(tEntity);
 
-  <a-scene id="mainScene" background="color:black" >
-  
+      // document
+      //   .querySelector("a-entity")
+      //   .addEventListener("click", function (evt) {
+      //     console.log("This A-Frame entity collided with another entity!");
+      //   });
+    }
 
-    <a-assets id="assets"> </a-assets>
-  </a-scene>
+    _videoSceneCreator = function (videoOptions) {
+      let videoAsset = $(
+        `<video id="video"
+               autoplay loop
+               crossorigin="anonymous"
+               playsinline webkit-playsinline
+               src="${videoOptions}">
+            </video>`)
+      $("#assets").append(videoAsset);
 
- 
-
-  <script>
-    const createWorld=function(environment,options){
-     // console.log(environment)
-       _objectCreator=function(vrObject){
-          let tAsset = $(
-            `<a-asset-item  id="${vrObject.name}" src="${vrObject.url}"></a-asset-item>`
-          );
-          $("#assets").append(tAsset);
-          let tEntity = $(
-            `<a-entity scale="${vrObject.scale}" rotation="${vrObject.rotation}" position="${vrObject.position}" gltf-model="#${vrObject.name}"></a-entity>`
-          );
-          $("#mainScene").append(tEntity);
-        
-       
-      }
-
-      _videoSceneCreator=function(videoOptions){
-        let videoAsset = $(
-          `<video id="video"
-             autoplay loop
-             crossorigin="anonymous"
-             playsinline webkit-playsinline
-             src="${videoOptions}">
-          </video>`)
-          $("#assets").append(videoAsset);  
-          
-          let videoSphere= $(`<a-videosphere
-      rotation="0 -90 0" src="#video"
-      play-on-click>
-    </a-videosphere>`)
-    $("#mainScene").append(videoSphere);  
+      let videoSphere = $(`<a-videosphere
+        rotation="0 -90 0" src="#video"
+        play-on-click>
+      </a-videosphere>`)
+      $("#mainScene").append(videoSphere);
 
       /* global AFRAME */
       AFRAME.registerComponent('play-on-click', {
-  init: function () {
-    this.onClick = this.onClick.bind(this);
-  },
-  play: function () {
-    window.addEventListener('click', this.onClick);
-  },
-  pause: function () {
-    window.removeEventListener('click', this.onClick);
-  },
-  onClick: function (evt) {
-    var videoEl = this.el.getAttribute('material').src;
-    if (!videoEl) { return; }
-    this.el.object3D.visible = true;
-    videoEl.play();
-  }
-});
-      }
-
-
-
-
-      /// SETUP THE WORLD
-      if(options.environmentOptions.preset){
-        document.getElementById('mainScene').setAttribute('environment',`preset:${options.environmentOptions.preset}`)
-      }else if(options.environmentOptions.video){
-
-        _videoSceneCreator(options.environmentOptions.video)
-      }else if(options.environmentOptions.panorama){
-      
-        let skyAsset=$(`<a-sky id="sky" src="${options.environmentOptions.panorama}" rotation="0 -130 0"></a-sky>`)
-        $("#mainScene").append(skyAsset);
-
-}else {
-        let skyAsset = $(
-          `<a-sky id="sky" color="${options.environmentOptions.skyAsset.color}"></a-sky>`
-
-        );
-        let planeAsset = $(
-          `<a-plane id="plane"  position="0 0 -4"
-      rotation="-90 0 0"
-      scale="100 100 100"
-      width="100"
-      height="100"
-      color="${options.environmentOptions.plane}"></a-plane>`
-
-        );
-        $("#mainScene").append(skyAsset);
-        $("#mainScene").append(planeAsset);
-      }
-
-    
-      
-
-     
-       // POPULATE THE WORLD
-      environment.vrObject.forEach(vrObject=>{
-          console.log('VR Object',vrObject)
-         _objectCreator(vrObject)  
-        })
-
-
+        init: function () {
+          this.onClick = this.onClick.bind(this);
+        },
+        play: function () {
+          window.addEventListener('click', this.onClick);
+        },
+        pause: function () {
+          window.removeEventListener('click', this.onClick);
+        },
+        onClick: function (evt) {
+          var videoEl = this.el.getAttribute('material').src;
+          if (!videoEl) { return; }
+          this.el.object3D.visible = true;
+          videoEl.play();
+        }
+      });
     }
 
 
 
 
+    /// SETUP THE WORLD
+    if (options.preset) {
+      document.getElementById('mainScene').setAttribute('environment', `preset:${options.preset}`)
+      environment.vrObject.forEach(vrObject => {
+        _objectCreator(vrObject)
+      })
+    } else if (options.video) {
 
-    $(document).ready(() => {
-      console
-      let dataUrl = "http://localhost:3001/api";
+      _videoSceneCreator(options.video)
+    } else if (options.panorama) {
 
-      let objectArray = [];
+      let skyAsset = $(`<a-sky id="sky" src="${options.skyAsset.url}" rotation="0 -130 0"></a-sky>`)
+      $("#mainScene").append(skyAsset);
 
-      
-      
+    } else {
+      let skyAsset = $(
+        `<a-sky id="sky" color="${options.skyAsset.color}"></a-sky>`
+      );
+      let planeAsset = $(
+        `<a-plane id="plane"  position="0 0 -4"
+        rotation="-90 0 0"
+        scale="100 100 100"
+        width="100"
+        height="100"
+        color="${options.floorAsset.color}"></a-plane>`
 
-      
+      );
+      $("#mainScene").append(skyAsset);
+      $("#mainScene").append(planeAsset);
 
-      // Retreving location,scale & rotation from dataUrl api
-      $.get(dataUrl, (result, err) => {
-        let env=result.data[0];
-        let env_name = env.environmentName;
-        let env_options={
-          environmentOptions:{
-            sky:"green",
-            plane:"purple",
-            //video:'https://vespascooter.s3.ap-southeast-2.amazonaws.com/360_VR+Master+Series+_+Free+Download+_+Crystal+Shower+Falls.mp4',
-            panorama:'https://generic-crate.s3.ap-southeast-2.amazonaws.com/miami+(1).jpeg',
-            preset:null
-          }
-        }
-        //env.environmentOptions.sky="red";
-        //env.environmentOptions.plane="green";
-        
-        createWorld(env, env_options)
-       // document.getElementById('mainScene').setAttribute('environment',`preset:${env_name}`)
-        //console.log(env_name)
-        
-      });
-    });
-  </script>
-</html>
+      // POPULATE THE WORLD
+      environment.vrObject.forEach(vrObject => {
+
+        _objectCreator(vrObject)
+      })
+
+    }
+
+  }
+    const records =<%- JSON.stringify(records) %>;
+    
+
+    const env = records[0]
+
+
+    createWorld(env, env.environmentOptions)
+
+    
+</script>
